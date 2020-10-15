@@ -1,16 +1,15 @@
 import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 
+import { SignInRequest } from '../types/index';
 import User from '../models/User';
 
-interface Request {
-  name: string;
-  email: string;
-  password: string;
-}
-
 class CreateUserService {
-  public async execute({ name, email, password }: Request): Promise<User> {
+  public async execute({
+    name,
+    email,
+    password,
+  }: SignInRequest): Promise<User> {
     const usersRepository = getRepository(User);
 
     const checkUserExists = await usersRepository.findOne({

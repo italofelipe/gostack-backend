@@ -4,10 +4,13 @@ import { parseISO } from 'date-fns';
 
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentService';
+import veirfyAuth from '../middlewares/verifyAuth';
 
 const appointmentsRouter = Router();
 
+appointmentsRouter.use(veirfyAuth);
 appointmentsRouter.get('/', async (req, res) => {
+  console.log(req.user);
   const appointmentsRepository = getCustomRepository(AppointmentsRepository);
   const appointments = await appointmentsRepository.find();
   return res.json(appointments);
