@@ -5,6 +5,7 @@ import { sign } from 'jsonwebtoken';
 import { LoginRequest, UserTypes } from '../types/index';
 import User from '../models/User';
 import authConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 class AuthUserService {
   public async execute({ email, password }: LoginRequest): Promise<UserTypes> {
@@ -15,12 +16,12 @@ class AuthUserService {
     });
 
     if (!user) {
-      throw new Error('Email/Password incorrect. Try again');
+      throw new AppError('Email/Password incorrect. Try again', 401);
     }
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched) {
-      throw new Error('Email/Password incorrect. Try again');
+      throw new AppError('Email/Password incorrect. Try again', 401);
     }
     const { secret, expiresIn } = authConfig.jwt;
     const token = sign({}, secret, {

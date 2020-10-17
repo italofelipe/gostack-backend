@@ -3,6 +3,7 @@ import { verify } from 'jsonwebtoken';
 
 import authconfig from '../config/auth';
 import { TokenPayload } from '../types/index';
+import AppError from '../errors/AppError';
 
 function verifyAuth(
   request: Request,
@@ -12,7 +13,7 @@ function verifyAuth(
   const { secret } = authconfig.jwt;
   const authHeader = request.headers.authorization;
   if (!authHeader) {
-    throw new Error('JWT Token is missing');
+    throw new AppError('JWT Token is missing', 401);
   }
   const [, token] = authHeader.split(' ');
 
@@ -25,7 +26,7 @@ function verifyAuth(
     };
     return next();
   } catch {
-    throw new Error('Invalid JWT Token');
+    throw new AppError('Invalid JWT Token', 401);
   }
 }
 

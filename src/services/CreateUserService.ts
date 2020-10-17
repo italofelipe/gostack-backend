@@ -3,6 +3,7 @@ import { hash } from 'bcryptjs';
 
 import { SignInRequest } from '../types/index';
 import User from '../models/User';
+import AppError from '../errors/AppError';
 
 class CreateUserService {
   public async execute({
@@ -17,7 +18,7 @@ class CreateUserService {
     });
 
     if (checkUserExists) {
-      throw new Error('Email address already used');
+      throw new AppError('Email address already used');
     }
 
     const hashedPassword = await hash(password, 10);
